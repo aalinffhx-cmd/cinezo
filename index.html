@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Cinezo</title>
+
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
+
+<meta name="theme-color" content="#e50914">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Cinezo">
+</head>
+
+<body>
+
+<header>
+  <div class="logo"><span>▶</span> CINEZO</div>
+  <button class="login-top" onclick="openAuth()">👤 Login</button>
+</header>
+
+<main>
+
+<section class="hero">
+  <small>🔥 TRENDING</small>
+  <h1>YOUR WORLD<br>OF STORIES</h1>
+  <p>Movies, series and entertainment in one place.</p>
+  <button onclick="openMovie('Cinezo Originals')">▶ Watch Now</button>
+</section>
+
+<section class="search-section">
+  <input
+    id="searchInput"
+    type="text"
+    placeholder="🔎 Search movies..."
+    oninput="searchMovies()"
+  >
+</section>
+
+<section>
+  <div class="section-title">
+    <h2>🔥 Trending Now</h2>
+  </div>
+
+  <div class="cards">
+
+    <div class="card movie-card"
+         data-name="dark world"
+         data-category="thriller">
+
+      <div class="poster poster-image"
+           style="background-image:url('posters/dark-world-poster.png');">
+      </div>
+
+      <h3>Dark World</h3>
+      <p>⭐ 8.4 • 2026 • 2h 10m</p>
+      <small>👻 Thriller • HD</small>
+
+      <button onclick="openMovie('Dark World')">
+        ▶ Play
+      </button>
+
+      <button onclick="addToList('Dark World')">
+        ＋ My List
+      </button>
+
+    </div>
+
+
+    <div class="card movie-card"
+         data-name="action hero"
+         data-category="action">
+
+      <div class="poster poster-image"
+           style="background-image:url('posters/action-hero-poster.png');">
+      </div>
+
+      <h3>Action Hero</h3>
+      <p>⭐ 8.7 • 2026 • 1h 55m</p>
+      <small>💥 Action • HD</small>
+
+      <button onclick="openMovie('Action Hero')">
+        ▶ Play
+      </button>
+
+      <button onclick="addToList('Action Hero')">
+        ＋ My List
+      </button>
+
+    </div>
+
+
+    <div class="card movie-card"
+         data-name="night mystery"
+         data-category="thriller">
+
+      <div class="poster poster-image"
+           style="background-image:url('posters/night-mystery-poster.png');">
+      </div>
+
+      <h3>Night Mystery</h3>
+      <p>⭐ 8.1 • 2026 • 2h 05m</p>
+      <small>👻 Thriller • HD</small>
+
+      <button onclick="openMovie('Night Mystery')">
+        ▶ Play
+      </button>
+
+      <button onclick="addToList('Night Mystery')">
+        ＋ My List
+      </button>
+
+    </div>
+
+  </div>
+</section>
+
+
+<section>
+
+  <div class="section-title">
+    <h2>💥 Action</h2>
+  </div>
+
+  <div class="cards">
+
+    <div class="card movie-card"
+         data-name="last warrior"
+         data-category="action">
+
+      <div class="poster poster2">
+        <span>⚔️</span>LAST<br>WARRIOR
+      </div>
+
+      <h3>Last Warrior</h3>
+      <p>⭐ 8.6 • 2026 • 2h 02m</p>
+      <small>💥 Action • HD</small>
+
+      <button onclick="openMovie('Last Warrior')">
+        ▶ Play
+      </button>
+
+      <button onclick="addToList('Last Warrior')">
+        ＋ My List
+      </button>
+
+    </div>
+
+
+    <div class="card movie-card"
+         data-name="speed force"
+         data-category="action">
+
+      <div class="poster poster1">
+        <span>🏎️</span>SPEED<br>FORCE
+      </div>
+
+      <h3>Speed Force</h3>
+      <p>⭐ 8.3 • 2026 • 1h 48m</p>
+      <small>🏎️ Action • HD</small>
+
+      <button onclick="openMovie('Speed Force')">
+        ▶ Play
+      </button>
+
+      <button onclick="addToList('Speed Force')">
+        ＋ My List
+      </button>
+
+    </div>
+
+  </div>
+</section>
+
+
+<section>
+
+  <div class="section-title">
+    <h2>❤️ Drama</h2>
+  </div>
+
+  <div class="cards">
+
+    <div class="card movie-card"
+         data-name="broken dreams"
+         data-category="drama">
+
+      <div class="poster poster3">
+        <span>💔</span>BROKEN<br>DREAMS
+      </div>
+
+      <h3>Broken Dreams</h3>
+      <p>⭐ 8.8 • 2026 • 2h 15m</p>
+      <small>❤️ Drama • HD</small>
+
+      <button onclick="openMovie('Broken Dreams')">
+        ▶ Play
+      </button>
+
+      <button onclick="addToList('Broken Dreams')">
+        ＋ My List
+      </button>
+
+    </div>
+
+
+    <div class="card movie-card"
+         data-name="the journey"
+         data-category="drama">
+
+      <div class="poster poster1">
+        <span>🛣️</span>THE<br>JOURNEY
+      </div>
+
+      <h3>The Journey</h3>
+      <p>⭐ 8.5 • 2026 • 1h 52m</p>
+      <small>❤️ Drama • HD</small>
+
+      <button onclick="openMovie('The Journey')">
+        ▶ Play
+      </button>
+
+      <button onclick="addToList('The Journey')">
+        ＋ My List
+      </button>
+
+    </div>
+
+  </div>
+</section>
+
+
+<section>
+
+  <div class="section-title">
+    <h2>😂 Comedy</h2>
+  </div>
+
+  <div class="cards">
+
+    <div class="card movie-card"
+         data-name="crazy friends"
+         data-category="comedy">
+
+      <div class="poster poster2">
+        <span>😂</span>CRAZY<br>FRIENDS
+      </div>
+
+      <h3>Crazy Friends</h3>
+      <p>⭐ 8.2 • 2026 • 1h 40m</p>
+      <small>😂 Comedy • HD</small>
+
+      <button onclick="openMovie('Crazy Friends')">
+        ▶ Play
+      </button>
+
+      <button onclick="addToList('Crazy Friends')">
+        ＋ My List
+      </button>
+
+    </div>
+
+
+    <div class="card movie-card"
+         data-name="funny night"
+         data-category="comedy">
+
+      <div class="poster poster3">
+        <span>🤣</span>FUNNY<br>NIGHT
+      </div>
+
+      <h3>Funny Night</h3>
+      <p>⭐ 8.0 • 2026 • 1h 35m</p>
+      <small>😂 Comedy • HD</small>
+
+      <button onclick="openMovie('Funny Night')">
+        ▶ Play
+      </button>
+
+      <button onclick="addToList('Funny Night')">
+        ＋ My List
+      </button>
+
+    </div>
+
+  </div>
+</section>
+
+
+<section id="myListSection" style="display:none;">
+
+  <div class="section-title">
+    <h2>❤️ My List</h2>
+  </div>
+
+  <div id="myListContainer" class="cards"></div>
+
+</section>
+
+
+<section>
+
+  <div class="section-title">
+    <h2>Categories</h2>
+  </div>
+
+  <div class="categories">
+
+    <button onclick="filterCategory('all')">
+      🎬 All
+    </button>
+
+    <button onclick="filterCategory('action')">
+      💥 Action
+    </button>
+
+    <button onclick="filterCategory('drama')">
+      ❤️ Drama
+    </button>
+
+    <button onclick="filterCategory('thriller')">
+      👻 Thriller
+    </button>
+
+    <button onclick="filterCategory('comedy')">
+      😂 Comedy
+    </button>
+
+    <button onclick="filterCategory('webseries')">
+      📺 Web Series
+    </button>
+
+  </div>
+
+</section>
+
+
+<section class="originals">
+
+  <span class="original-badge">
+    CINEZO ORIGINAL
+  </span>
+
+  <h2>Your Next Story</h2>
+
+  <p>⭐ 9.0 • 2026 • HD</p>
+
+  <p>
+    Exclusive stories made for Cinezo.
+  </p>
+
+  <button onclick="openMovie('Cinezo Originals')">
+    ▶ Play
+  </button>
+
+  <button onclick="addToList('Cinezo Originals')">
+    ＋ My List
+  </button>
+
+</section>
+
+
+<section id="profileSection" class="profile-section">
+
+  <div class="profile-avatar">
+    👤
+  </div>
+
+  <h2 id="profileName">
+    Cinezo User
+  </h2>
+
+  <p>
+    Welcome to Cinezo 🎬
+  </p>
+
+  <div class="profile-menu">
+
+    <button onclick="editProfile()">
+      ✏️ Edit Profile
+    </button>
+
+    <button onclick="displayMyList()">
+      ❤️ My List
+    </button>
+
+    <button onclick="logoutUser()">
+      🚪 Logout
+    </button>
+
+  </div>
+
+</section>
+
+</main>
+
+
+<nav>
+
+  <button onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    🏠
+    <span>Home</span>
+  </button>
+
+  <button onclick="document.getElementById('searchInput').focus()">
+    🔎
+    <span>Search</span>
+  </button>
+
+  <button onclick="displayMyList()">
+    ❤️
+    <span>My List</span>
+  </button>
+
+  <button onclick="showProfile()">
+    👤
+    <span>Profile</span>
+  </button>
+
+</nav>
+
+
+<!-- LOGIN MODAL -->
+
+<div id="authModal" class="modal">
+
+  <div class="modal-box auth-box">
+
+    <button class="close" onclick="closeAuth()">
+      ×
+    </button>
+
+    <div class="auth-logo">
+      ▶ CINEZO
+    </div>
+
+    <h2 id="authTitle">
+      Login to Cinezo
+    </h2>
+
+    <p id="authMessage">
+      Welcome back! 🎬
+    </p>
+
+    <input
+      id="authEmail"
+      class="auth-input"
+      type="email"
+      placeholder="Email"
+    >
+
+    <input
+      id="authPassword"
+      class="auth-input"
+      type="password"
+      placeholder="Password"
+    >
+
+    <button
+      class="auth-button"
+      onclick="loginUser()">
+      🔐 Login
+    </button>
+
+    <button
+      class="switch-auth"
+      onclick="showSignup()">
+      New user? Create account
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- MOVIE MODAL -->
+
+<div id="modal" class="modal">
+
+  <div class="modal-box">
+
+    <button
+      class="close"
+      onclick="closeMovie()">
+      ×
+    </button>
+
+    <div
+      id="detailPoster"
+      class="detail-poster">
+      🎬
+    </div>
+
+    <h2 id="movieTitle">
+      Movie
+    </h2>
+
+    <p id="movieInfo">
+      2026 • HD
+    </p>
+
+    <p id="movieDescription">
+      Welcome to Cinezo. Your world of stories.
+    </p>
+
+    <button
+      class="watch-button"
+      onclick="playSelectedMovie()">
+      ▶ Watch Now
+    </button>
+
+    <video
+      id="videoPlayer"
+      controls
+      playsinline>
+    </video>
+
+  </div>
+
+</div>
+
+
+<script type="module" src="script.js"></script>
+
+</body>
+</html>
