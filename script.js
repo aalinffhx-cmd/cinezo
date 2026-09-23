@@ -44,7 +44,7 @@ let selectedMovie = "";
 
 
 /* =========================
-   MOVIE DATA
+   MOVIE CATALOGUE
 ========================= */
 
 const movieData = {
@@ -52,7 +52,8 @@ const movieData = {
   "Dark World": {
     category: "Thriller",
     info: "⭐ 8.4 • 2026 • 2h 10m",
-    description: "A mysterious world hides secrets waiting to be discovered.",
+    description:
+      "A mysterious world hides secrets waiting to be discovered. Follow the journey into a world full of mystery and unexpected moments.",
     poster: "posters/dark-world-poster.png",
     video: "videos/dark-world.mp4"
   },
@@ -60,7 +61,8 @@ const movieData = {
   "Action Hero": {
     category: "Action",
     info: "⭐ 8.7 • 2026 • 1h 55m",
-    description: "An action-packed adventure full of excitement.",
+    description:
+      "An action-packed adventure filled with challenges, speed and exciting moments.",
     poster: "posters/action-hero-poster.png",
     video: "videos/action-hero.mp4"
   },
@@ -68,7 +70,8 @@ const movieData = {
   "Night Mystery": {
     category: "Thriller",
     info: "⭐ 8.1 • 2026 • 2h 05m",
-    description: "A mysterious night begins an unforgettable journey.",
+    description:
+      "A mysterious night begins an unforgettable journey where every moment brings a new secret.",
     poster: "posters/night-mystery-poster.png",
     video: "videos/night-mystery.mp4"
   },
@@ -76,7 +79,8 @@ const movieData = {
   "Last Warrior": {
     category: "Action",
     info: "⭐ 8.6 • 2026 • 2h 02m",
-    description: "A warrior faces his biggest challenge.",
+    description:
+      "A warrior faces his biggest challenge and must find the courage to move forward.",
     poster: "",
     video: "videos/demo.mp4"
   },
@@ -84,7 +88,8 @@ const movieData = {
   "Speed Force": {
     category: "Action",
     info: "⭐ 8.3 • 2026 • 1h 48m",
-    description: "Speed, competition and adventure come together.",
+    description:
+      "Speed, competition and adventure come together in an exciting journey.",
     poster: "",
     video: "videos/demo.mp4"
   },
@@ -92,7 +97,8 @@ const movieData = {
   "Broken Dreams": {
     category: "Drama",
     info: "⭐ 8.8 • 2026 • 2h 15m",
-    description: "A powerful story about dreams and determination.",
+    description:
+      "A powerful story about dreams, determination and finding a way forward.",
     poster: "",
     video: "videos/demo.mp4"
   },
@@ -100,7 +106,8 @@ const movieData = {
   "The Journey": {
     category: "Drama",
     info: "⭐ 8.5 • 2026 • 1h 52m",
-    description: "Every journey has a story.",
+    description:
+      "Every journey has a story. A simple beginning leads to an unforgettable adventure.",
     poster: "",
     video: "videos/demo.mp4"
   },
@@ -108,7 +115,8 @@ const movieData = {
   "Crazy Friends": {
     category: "Comedy",
     info: "⭐ 8.2 • 2026 • 1h 40m",
-    description: "A group of friends gets into hilarious situations.",
+    description:
+      "A group of friends gets into hilarious situations and creates unforgettable memories.",
     poster: "",
     video: "videos/demo.mp4"
   },
@@ -116,7 +124,8 @@ const movieData = {
   "Funny Night": {
     category: "Comedy",
     info: "⭐ 8.0 • 2026 • 1h 35m",
-    description: "One crazy night creates unforgettable memories.",
+    description:
+      "One crazy night turns into a collection of funny and unexpected moments.",
     poster: "",
     video: "videos/demo.mp4"
   },
@@ -124,7 +133,8 @@ const movieData = {
   "Cinezo Originals": {
     category: "Original",
     info: "⭐ 9.0 • 2026 • HD",
-    description: "Exclusive stories made for Cinezo.",
+    description:
+      "Exclusive original stories made for Cinezo. Discover your next story.",
     poster: "",
     video: "videos/demo.mp4"
   }
@@ -142,23 +152,34 @@ function openMovie(name) {
 
   const movie = movieData[name] || {};
 
-  const title = document.getElementById("movieTitle");
-  const info = document.getElementById("movieInfo");
-  const description = document.getElementById("movieDescription");
-  const detailPoster = document.getElementById("detailPoster");
-  const player = document.getElementById("videoPlayer");
+  const title =
+    document.getElementById("movieTitle");
+
+  const info =
+    document.getElementById("movieInfo");
+
+  const description =
+    document.getElementById("movieDescription");
+
+  const detailPoster =
+    document.getElementById("detailPoster");
+
+  const player =
+    document.getElementById("videoPlayer");
 
   if (title) {
     title.textContent = name;
   }
 
   if (info) {
-    info.textContent = movie.info || "2026 • HD";
+    info.textContent =
+      movie.info || "2026 • HD";
   }
 
   if (description) {
     description.textContent =
-      movie.description || "Welcome to Cinezo.";
+      movie.description ||
+      "Welcome to Cinezo. Your world of stories.";
   }
 
   if (detailPoster) {
@@ -168,11 +189,18 @@ function openMovie(name) {
       detailPoster.style.backgroundImage =
         `url("${movie.poster}")`;
 
+      detailPoster.style.backgroundSize =
+        "cover";
+
+      detailPoster.style.backgroundPosition =
+        "center";
+
       detailPoster.textContent = "";
 
     } else {
 
       detailPoster.style.backgroundImage = "";
+
       detailPoster.textContent = "🎬";
 
     }
@@ -187,9 +215,11 @@ function openMovie(name) {
     player.load();
 
     player.style.display = "none";
+
   }
 
-  const modal = document.getElementById("modal");
+  const modal =
+    document.getElementById("modal");
 
   if (modal) {
     modal.style.display = "flex";
@@ -203,13 +233,21 @@ function openMovie(name) {
 
 function closeMovie() {
 
-  const modal = document.getElementById("modal");
-  const player = document.getElementById("videoPlayer");
+  const modal =
+    document.getElementById("modal");
+
+  const player =
+    document.getElementById("videoPlayer");
 
   if (player) {
+
     player.pause();
+
     player.removeAttribute("src");
+
     player.load();
+
+    player.style.display = "none";
   }
 
   if (modal) {
@@ -224,25 +262,35 @@ function closeMovie() {
 
 function playSelectedMovie() {
 
-  const player = document.getElementById("videoPlayer");
+  const player =
+    document.getElementById("videoPlayer");
 
   if (!player) {
+
     alert("Video player nahi mila.");
+
     return;
   }
 
-  const movie = movieData[selectedMovie];
+  const movie =
+    movieData[selectedMovie];
 
   const videoPath =
     movie && movie.video
       ? movie.video
       : "videos/demo.mp4";
 
-  console.log("Playing:", videoPath);
+  console.log(
+    "Cinezo playing:",
+    selectedMovie,
+    videoPath
+  );
 
   player.style.display = "block";
 
   player.controls = true;
+
+  player.playsInline = true;
 
   player.src = videoPath;
 
@@ -252,20 +300,19 @@ function playSelectedMovie() {
     .then(() => {
 
       console.log(
-        "Video successfully started:",
-        videoPath
+        "Video started successfully."
       );
 
     })
     .catch(error => {
 
       console.log(
-        "Video autoplay blocked/error:",
+        "Autoplay blocked:",
         error
       );
 
       alert(
-        "Video load ho gaya hai. Video ke ▶ button ko press karo."
+        "Video ready hai. ▶ Play button dabao."
       );
 
     });
@@ -301,20 +348,13 @@ function searchMovies() {
       (card.dataset.category || "")
         .toLowerCase();
 
-    if (
+    const match =
       input === "" ||
       name.includes(input) ||
-      category.includes(input)
-    ) {
+      category.includes(input);
 
-      card.style.display = "";
-
-    } else {
-
-      card.style.display = "none";
-
-    }
-
+    card.style.display =
+      match ? "" : "none";
   });
 }
 
@@ -349,7 +389,6 @@ function filterCategory(category) {
       card.style.display = "none";
 
     }
-
   });
 }
 
@@ -360,7 +399,8 @@ function filterCategory(category) {
 
 async function saveMyList() {
 
-  const user = auth.currentUser;
+  const user =
+    auth.currentUser;
 
   if (!user) return;
 
@@ -376,7 +416,9 @@ async function saveMyList() {
       }
     );
 
-    console.log("My List saved.");
+    console.log(
+      "My List saved successfully."
+    );
 
   } catch (error) {
 
@@ -395,11 +437,15 @@ async function saveMyList() {
 
 async function loadMyList() {
 
-  const user = auth.currentUser;
+  const user =
+    auth.currentUser;
 
   if (!user) {
+
     myList = [];
+
     displayMyList();
+
     return;
   }
 
@@ -412,7 +458,8 @@ async function loadMyList() {
 
     if (userDoc.exists()) {
 
-      const data = userDoc.data();
+      const data =
+        userDoc.data();
 
       myList =
         Array.isArray(data.myList)
@@ -446,7 +493,9 @@ async function addToList(name) {
 
   if (!auth.currentUser) {
 
-    alert("Please login first 🔐");
+    alert(
+      "Please login first 🔐"
+    );
 
     openAuth();
 
@@ -460,15 +509,16 @@ async function addToList(name) {
     await saveMyList();
 
     alert(
-      name + " added to My List ❤️"
+      name +
+      " added to My List ❤️"
     );
 
   } else {
 
     alert(
-      name + " is already in My List ❤️"
+      name +
+      " is already in My List ❤️"
     );
-
   }
 
   displayMyList();
@@ -561,7 +611,6 @@ function displayMyList() {
           🎬
         </div>
       `;
-
     }
 
     card.innerHTML = `
@@ -624,6 +673,11 @@ function editProfile() {
 
   if (!name) return;
 
+  const cleanName =
+    name.trim();
+
+  if (!cleanName) return;
+
   const profileName =
     document.getElementById(
       "profileName"
@@ -632,19 +686,19 @@ function editProfile() {
   if (profileName) {
 
     profileName.textContent =
-      name;
+      cleanName;
 
   }
 
   localStorage.setItem(
     "cinezoProfileName",
-    name
+    cleanName
   );
 }
 
 
 /* =========================
-   AUTH
+   AUTH MODAL
 ========================= */
 
 function openAuth() {
@@ -655,7 +709,10 @@ function openAuth() {
     );
 
   if (modal) {
-    modal.style.display = "flex";
+
+    modal.style.display =
+      "flex";
+
   }
 
   showLogin();
@@ -670,22 +727,39 @@ function closeAuth() {
     );
 
   if (modal) {
-    modal.style.display = "none";
+
+    modal.style.display =
+      "none";
+
   }
 }
 
 
 function showSignup() {
 
-  document.getElementById(
-    "authTitle"
-  ).textContent =
-    "Create Cinezo Account";
+  const title =
+    document.getElementById(
+      "authTitle"
+    );
 
-  document.getElementById(
-    "authMessage"
-  ).textContent =
-    "Create your account 🎬";
+  const message =
+    document.getElementById(
+      "authMessage"
+    );
+
+  if (title) {
+
+    title.textContent =
+      "Create Cinezo Account";
+
+  }
+
+  if (message) {
+
+    message.textContent =
+      "Create your account 🎬";
+
+  }
 
   const button =
     document.querySelector(
@@ -721,15 +795,29 @@ function showSignup() {
 
 function showLogin() {
 
-  document.getElementById(
-    "authTitle"
-  ).textContent =
-    "Login to Cinezo";
+  const title =
+    document.getElementById(
+      "authTitle"
+    );
 
-  document.getElementById(
-    "authMessage"
-  ).textContent =
-    "Welcome back! 🎬";
+  const message =
+    document.getElementById(
+      "authMessage"
+    );
+
+  if (title) {
+
+    title.textContent =
+      "Login to Cinezo";
+
+  }
+
+  if (message) {
+
+    message.textContent =
+      "Welcome back! 🎬";
+
+  }
 
   const button =
     document.querySelector(
@@ -808,7 +896,6 @@ async function signupUser() {
       "Signup error: " +
       error.message
     );
-
   }
 }
 
@@ -858,7 +945,6 @@ async function loginUser() {
       "Login error: " +
       error.message
     );
-
   }
 }
 
@@ -885,7 +971,6 @@ async function logoutUser() {
       "Logout error: " +
       error.message
     );
-
   }
 }
 
@@ -914,7 +999,13 @@ onAuthStateChanged(
 
       if (profileName) {
 
+        const savedName =
+          localStorage.getItem(
+            "cinezoProfileName"
+          );
+
         profileName.textContent =
+          savedName ||
           user.email.split("@")[0];
 
       }
@@ -928,7 +1019,6 @@ onAuthStateChanged(
       myList = [];
 
       displayMyList();
-
     }
 
   }
@@ -936,7 +1026,7 @@ onAuthStateChanged(
 
 
 /* =========================
-   PROFILE NAME
+   LOAD PROFILE NAME
 ========================= */
 
 window.addEventListener(
@@ -961,9 +1051,7 @@ window.addEventListener(
           savedName;
 
       }
-
     }
-
   }
 );
 
@@ -977,10 +1065,14 @@ window.addEventListener(
   event => {
 
     const movieModal =
-      document.getElementById("modal");
+      document.getElementById(
+        "modal"
+      );
 
     const authModal =
-      document.getElementById("authModal");
+      document.getElementById(
+        "authModal"
+      );
 
     if (
       movieModal &&
