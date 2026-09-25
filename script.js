@@ -1,4 +1,9 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+// ===============================
+// CINEZO - FINAL SCRIPT
+// Firebase + Login Required + My List + Movies
+// ===============================
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
   getAuth,
@@ -6,22 +11,24 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 import {
   getFirestore,
   doc,
   getDoc,
-  setDoc
-} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+  setDoc,
+  collection,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-/* =========================
-   FIREBASE
-========================= */
+// ===============================
+// FIREBASE CONFIG
+// ===============================
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBJleOE7G-_-6_9pyoYFKMVUrFOxJwseVE",
+  apiKey: "AIzaSyBJleOE7G_-6_9pyoYFKMVUrFOxJwseVE",
   authDomain: "cinezo-1d2ad.firebaseapp.com",
   projectId: "cinezo-1d2ad",
   storageBucket: "cinezo-1d2ad.firebasestorage.app",
@@ -35,846 +42,553 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 
-/* =========================
-   VARIABLES
-========================= */
+// ===============================
+// MOVIE DATA
+// ===============================
 
-let myList = [];
-let selectedMovie = "";
-
-
-/* =========================
-   MOVIE CATALOGUE
-========================= */
-
-const movieData = {
+let movieData = {
 
   "Dark World": {
     category: "Thriller",
-    info: "⭐ 8.4 • 2026 • 2h 10m",
-    description:
-      "A mysterious world hides secrets waiting to be discovered. Follow the journey into a world full of mystery and unexpected moments.",
+    year: "2026",
+    duration: "2h 10m",
     poster: "posters/dark-world-poster.png",
-    video: "videos/dark-world.mp4"
+    video: "videos/dark-world.mp4",
+    description: "A mysterious world filled with secrets and unexpected twists."
   },
 
   "Action Hero": {
     category: "Action",
-    info: "⭐ 8.7 • 2026 • 1h 55m",
-    description:
-      "An action-packed adventure filled with challenges, speed and exciting moments.",
+    year: "2026",
+    duration: "1h 55m",
     poster: "posters/action-hero-poster.png",
-    video: "videos/action-hero.mp4"
+    video: "videos/action-hero.mp4",
+    description: "An action-packed journey full of danger and adventure."
   },
 
   "Night Mystery": {
     category: "Thriller",
-    info: "⭐ 8.1 • 2026 • 2h 05m",
-    description:
-      "A mysterious night begins an unforgettable journey where every moment brings a new secret.",
+    year: "2026",
+    duration: "2h 05m",
     poster: "posters/night-mystery-poster.png",
-    video: "videos/night-mystery.mp4"
+    video: "videos/night-mystery.mp4",
+    description: "One night. One mystery. And a secret waiting to be discovered."
   },
 
   "Last Warrior": {
     category: "Action",
-    info: "⭐ 8.6 • 2026 • 2h 02m",
-    description:
-      "A warrior faces his biggest challenge and must find the courage to move forward.",
-    poster: "",
-    video: "videos/demo.mp4"
+    year: "2026",
+    duration: "2h 00m",
+    poster: "posters/last-warrior-poster.png",
+    video: "videos/last-warrior.mp4",
+    description: "A warrior returns for one final mission."
   },
 
   "Speed Force": {
     category: "Action",
-    info: "⭐ 8.3 • 2026 • 1h 48m",
-    description:
-      "Speed, competition and adventure come together in an exciting journey.",
-    poster: "",
-    video: "videos/demo.mp4"
+    year: "2026",
+    duration: "1h 48m",
+    poster: "posters/speed-force-poster.png",
+    video: "videos/speed-force.mp4",
+    description: "Speed, power and a race against time."
   },
 
   "Broken Dreams": {
     category: "Drama",
-    info: "⭐ 8.8 • 2026 • 2h 15m",
-    description:
-      "A powerful story about dreams, determination and finding a way forward.",
-    poster: "",
-    video: "videos/demo.mp4"
+    year: "2026",
+    duration: "1h 52m",
+    poster: "posters/broken-dreams-poster.png",
+    video: "videos/broken-dreams.mp4",
+    description: "A story about dreams, struggles and new beginnings."
   },
 
   "The Journey": {
     category: "Drama",
-    info: "⭐ 8.5 • 2026 • 1h 52m",
-    description:
-      "Every journey has a story. A simple beginning leads to an unforgettable adventure.",
-    poster: "",
-    video: "videos/demo.mp4"
+    year: "2026",
+    duration: "1h 45m",
+    poster: "posters/the-journey-poster.png",
+    video: "videos/the-journey.mp4",
+    description: "Every journey has a story."
   },
 
   "Crazy Friends": {
     category: "Comedy",
-    info: "⭐ 8.2 • 2026 • 1h 40m",
-    description:
-      "A group of friends gets into hilarious situations and creates unforgettable memories.",
-    poster: "",
-    video: "videos/demo.mp4"
+    year: "2026",
+    duration: "1h 35m",
+    poster: "posters/crazy-friends-poster.png",
+    video: "videos/crazy-friends.mp4",
+    description: "Four friends. Unlimited madness."
   },
 
   "Funny Night": {
     category: "Comedy",
-    info: "⭐ 8.0 • 2026 • 1h 35m",
-    description:
-      "One crazy night turns into a collection of funny and unexpected moments.",
-    poster: "",
-    video: "videos/demo.mp4"
+    year: "2026",
+    duration: "1h 30m",
+    poster: "posters/funny-night-poster.png",
+    video: "videos/funny-night.mp4",
+    description: "A crazy night full of laughter."
   },
 
   "Cinezo Originals": {
-    category: "Original",
-    info: "⭐ 9.0 • 2026 • HD",
-    description:
-      "Exclusive original stories made for Cinezo. Discover your next story.",
-    poster: "",
-    video: "videos/demo.mp4"
+    category: "Originals",
+    year: "2026",
+    duration: "HD",
+    poster: "posters/cinezo-originals-poster.png",
+    video: "videos/demo.mp4",
+    description: "Original entertainment made for Cinezo."
   }
 
 };
 
 
-/* =========================
-   OPEN MOVIE
-========================= */
+// ===============================
+// VARIABLES
+// ===============================
 
-function openMovie(name) {
+let selectedMovie = null;
+let pendingMovie = null;
+let myList = [];
+
+
+// ===============================
+// LOAD ADMIN MOVIES
+// ===============================
+
+async function loadAdminMovies() {
+
+  const container =
+    document.getElementById("adminMoviesContainer");
+
+  if (!container) return;
+
+  // Firestore movies require login
+  if (!auth.currentUser) {
+    container.innerHTML = "";
+    return;
+  }
+
+  try {
+
+    const snapshot =
+      await getDocs(collection(db, "movies"));
+
+    container.innerHTML = "";
+
+    snapshot.forEach((movieDoc) => {
+
+      const data = movieDoc.data();
+
+      if (!data.title) return;
+
+      movieData[data.title] = {
+
+        category: data.category || "Other",
+
+        year: data.year || "2026",
+
+        duration: data.duration || "",
+
+        poster: data.poster || "",
+
+        video: data.video || "",
+
+        description:
+          data.description ||
+          "Watch this movie on Cinezo."
+
+      };
+
+      const card =
+        document.createElement("div");
+
+      card.className = "movie-card";
+
+      card.innerHTML = `
+        <img
+          src="${data.poster || "posters/dark-world-poster.png"}"
+          alt="${data.title}"
+          onerror="this.style.display='none'"
+        >
+
+        <div class="movie-card-info">
+
+          <h3>${data.title}</h3>
+
+          <p>
+            ${data.category || "Movie"}
+            •
+            ${data.year || ""}
+          </p>
+
+          <button
+            onclick="openMovie('${escapeQuotes(data.title)}')"
+          >
+            ▶ Play
+          </button>
+
+        </div>
+      `;
+
+      container.appendChild(card);
+
+    });
+
+  } catch (error) {
+
+    console.log(
+      "Admin movies error:",
+      error
+    );
+
+  }
+
+}
+
+
+// ===============================
+// ESCAPE QUOTES
+// ===============================
+
+function escapeQuotes(text) {
+
+  return String(text)
+    .replace(/\\/g, "\\\\")
+    .replace(/'/g, "\\'");
+
+}
+
+
+// ===============================
+// OPEN MOVIE
+// LOGIN REQUIRED
+// ===============================
+
+window.openMovie = function(name) {
+
+  // 🔐 LOGIN REQUIRED
+  if (!auth.currentUser) {
+
+    pendingMovie = name;
+
+    alert(
+      "Movie dekhne ke liye pehle Login karo 🔐"
+    );
+
+    window.openAuth();
+
+    return;
+  }
+
+
+  const movie = movieData[name];
+
+  if (!movie) {
+
+    alert("Movie nahi mili.");
+
+    return;
+  }
+
 
   selectedMovie = name;
 
-  const movie = movieData[name] || {};
 
   const title =
     document.getElementById("movieTitle");
 
-  const info =
-    document.getElementById("movieInfo");
+  const poster =
+    document.getElementById("moviePoster");
 
   const description =
     document.getElementById("movieDescription");
 
-  const detailPoster =
-    document.getElementById("detailPoster");
+  const details =
+    document.getElementById("movieDetails");
 
-  const player =
-    document.getElementById("videoPlayer");
 
   if (title) {
+
     title.textContent = name;
+
   }
 
-  if (info) {
-    info.textContent =
-      movie.info || "2026 • HD";
+
+  if (poster) {
+
+    poster.src = movie.poster || "";
+
+    poster.style.display =
+      movie.poster ? "block" : "none";
+
   }
+
 
   if (description) {
+
     description.textContent =
       movie.description ||
-      "Welcome to Cinezo. Your world of stories.";
-  }
-
-  if (detailPoster) {
-
-    if (movie.poster) {
-
-      detailPoster.style.backgroundImage =
-        `url("${movie.poster}")`;
-
-      detailPoster.style.backgroundSize =
-        "cover";
-
-      detailPoster.style.backgroundPosition =
-        "center";
-
-      detailPoster.textContent = "";
-
-    } else {
-
-      detailPoster.style.backgroundImage = "";
-
-      detailPoster.textContent = "🎬";
-
-    }
-  }
-
-  if (player) {
-
-    player.pause();
-
-    player.removeAttribute("src");
-
-    player.load();
-
-    player.style.display = "none";
+      "Watch this movie on Cinezo.";
 
   }
+
+
+  if (details) {
+
+    details.innerHTML = `
+      <span>${movie.category || ""}</span>
+      <span>${movie.year || ""}</span>
+      <span>${movie.duration || ""}</span>
+    `;
+
+  }
+
 
   const modal =
-    document.getElementById("modal");
+    document.getElementById("movieModal");
+
 
   if (modal) {
+
     modal.style.display = "flex";
+
   }
-}
+
+};
 
 
-/* =========================
-   CLOSE MOVIE
-========================= */
+// ===============================
+// CLOSE MOVIE
+// ===============================
 
-function closeMovie() {
+window.closeMovie = function() {
 
   const modal =
-    document.getElementById("modal");
-
-  const player =
-    document.getElementById("videoPlayer");
-
-  if (player) {
-
-    player.pause();
-
-    player.removeAttribute("src");
-
-    player.load();
-
-    player.style.display = "none";
-  }
+    document.getElementById("movieModal");
 
   if (modal) {
+
     modal.style.display = "none";
+
   }
-}
 
 
-/* =========================
-   PLAY MOVIE
-========================= */
+  const video =
+    document.getElementById("movieVideo");
 
-function playSelectedMovie() {
 
-  const player =
-    document.getElementById("videoPlayer");
+  if (video) {
 
-  if (!player) {
+    video.pause();
 
-    alert("Video player nahi mila.");
+    video.removeAttribute("src");
+
+    video.load();
+
+  }
+
+
+  selectedMovie = null;
+
+};
+
+
+// ===============================
+// PLAY SELECTED MOVIE
+// ===============================
+
+window.playSelectedMovie = function() {
+
+  if (!selectedMovie) return;
+
+
+  // 🔐 LOGIN REQUIRED
+  if (!auth.currentUser) {
+
+    pendingMovie = selectedMovie;
+
+    window.closeMovie();
+
+    alert(
+      "Movie play karne ke liye pehle Login karo 🔐"
+    );
+
+    window.openAuth();
 
     return;
+
   }
+
 
   const movie =
     movieData[selectedMovie];
 
-  const videoPath =
-    movie && movie.video
-      ? movie.video
-      : "videos/demo.mp4";
 
-  console.log(
-    "Cinezo playing:",
-    selectedMovie,
-    videoPath
-  );
-
-  player.style.display = "block";
-
-  player.controls = true;
-
-  player.playsInline = true;
-
-  player.src = videoPath;
-
-  player.load();
-
-  player.play()
-    .then(() => {
-
-      console.log(
-        "Video started successfully."
-      );
-
-    })
-    .catch(error => {
-
-      console.log(
-        "Autoplay blocked:",
-        error
-      );
-
-      alert(
-        "Video ready hai. ▶ Play button dabao."
-      );
-
-    });
-}
-
-
-/* =========================
-   SEARCH
-========================= */
-
-function searchMovies() {
-
-  const inputElement =
-    document.getElementById("searchInput");
-
-  if (!inputElement) return;
-
-  const input =
-    inputElement.value
-      .toLowerCase()
-      .trim();
-
-  const cards =
-    document.querySelectorAll(".movie-card");
-
-  cards.forEach(card => {
-
-    const name =
-      (card.dataset.name || "")
-        .toLowerCase();
-
-    const category =
-      (card.dataset.category || "")
-        .toLowerCase();
-
-    const match =
-      input === "" ||
-      name.includes(input) ||
-      category.includes(input);
-
-    card.style.display =
-      match ? "" : "none";
-  });
-}
-
-
-/* =========================
-   CATEGORY FILTER
-========================= */
-
-function filterCategory(category) {
-
-  const cards =
-    document.querySelectorAll(".movie-card");
-
-  const selected =
-    category.toLowerCase();
-
-  cards.forEach(card => {
-
-    const cardCategory =
-      (card.dataset.category || "")
-        .toLowerCase();
-
-    if (
-      selected === "all" ||
-      cardCategory === selected
-    ) {
-
-      card.style.display = "";
-
-    } else {
-
-      card.style.display = "none";
-
-    }
-  });
-}
-
-
-/* =========================
-   FIRESTORE SAVE
-========================= */
-
-async function saveMyList() {
-
-  const user =
-    auth.currentUser;
-
-  if (!user) return;
-
-  try {
-
-    await setDoc(
-      doc(db, "users", user.uid),
-      {
-        myList: myList
-      },
-      {
-        merge: true
-      }
-    );
-
-    console.log(
-      "My List saved successfully."
-    );
-
-  } catch (error) {
-
-    console.error(
-      "My List save error:",
-      error
-    );
-
-  }
-}
-
-
-/* =========================
-   FIRESTORE LOAD
-========================= */
-
-async function loadMyList() {
-
-  const user =
-    auth.currentUser;
-
-  if (!user) {
-
-    myList = [];
-
-    displayMyList();
-
-    return;
-  }
-
-  try {
-
-    const userDoc =
-      await getDoc(
-        doc(db, "users", user.uid)
-      );
-
-    if (userDoc.exists()) {
-
-      const data =
-        userDoc.data();
-
-      myList =
-        Array.isArray(data.myList)
-          ? data.myList
-          : [];
-
-    } else {
-
-      myList = [];
-
-    }
-
-    displayMyList();
-
-  } catch (error) {
-
-    console.error(
-      "My List load error:",
-      error
-    );
-
-  }
-}
-
-
-/* =========================
-   ADD TO MY LIST
-========================= */
-
-async function addToList(name) {
-
-  if (!auth.currentUser) {
+  if (!movie || !movie.video) {
 
     alert(
-      "Please login first 🔐"
+      "Is movie ka video available nahi hai."
     );
 
-    openAuth();
-
     return;
+
   }
 
-  if (!myList.includes(name)) {
 
-    myList.push(name);
+  const video =
+    document.getElementById("movieVideo");
 
-    await saveMyList();
+
+  if (!video) {
+
+    alert("Video player nahi mila.");
+
+    return;
+
+  }
+
+
+  video.src = movie.video;
+
+  video.style.display = "block";
+
+  video.load();
+
+
+  video.play().catch(() => {
 
     alert(
-      name +
-      " added to My List ❤️"
+      "Video play karne ke liye Play button dabao."
     );
-
-  } else {
-
-    alert(
-      name +
-      " is already in My List ❤️"
-    );
-  }
-
-  displayMyList();
-}
-
-
-/* =========================
-   REMOVE FROM MY LIST
-========================= */
-
-async function removeFromList(name) {
-
-  myList =
-    myList.filter(
-      movie => movie !== name
-    );
-
-  await saveMyList();
-
-  displayMyList();
-}
-
-
-/* =========================
-   DISPLAY MY LIST
-========================= */
-
-function displayMyList() {
-
-  const section =
-    document.getElementById(
-      "myListSection"
-    );
-
-  const container =
-    document.getElementById(
-      "myListContainer"
-    );
-
-  if (!section || !container) {
-    return;
-  }
-
-  section.style.display = "block";
-
-  container.innerHTML = "";
-
-  if (myList.length === 0) {
-
-    container.innerHTML = `
-      <div class="card">
-        <h3>My List is Empty ❤️</h3>
-        <p>Add movies to watch later.</p>
-      </div>
-    `;
-
-    section.scrollIntoView({
-      behavior: "smooth"
-    });
-
-    return;
-  }
-
-  myList.forEach(name => {
-
-    const movie =
-      movieData[name] || {};
-
-    const card =
-      document.createElement("div");
-
-    card.className =
-      "card movie-card";
-
-    let posterHTML = "";
-
-    if (movie.poster) {
-
-      posterHTML = `
-        <div
-          class="poster poster-image"
-          style="background-image:url('${movie.poster}');">
-        </div>
-      `;
-
-    } else {
-
-      posterHTML = `
-        <div class="poster poster2">
-          🎬
-        </div>
-      `;
-    }
-
-    card.innerHTML = `
-      ${posterHTML}
-
-      <h3>${name}</h3>
-
-      <p>${movie.info || "2026 • HD"}</p>
-
-      <small>
-        ${movie.category || "Entertainment"}
-      </small>
-
-      <button onclick="openMovie('${name}')">
-        ▶ Play
-      </button>
-
-      <button onclick="removeFromList('${name}')">
-        ❌ Remove
-      </button>
-    `;
-
-    container.appendChild(card);
 
   });
 
-  section.scrollIntoView({
-    behavior: "smooth"
-  });
-}
+};
 
 
-/* =========================
-   PROFILE
-========================= */
+// ===============================
+// AUTH MODAL
+// ===============================
 
-function showProfile() {
-
-  const profile =
-    document.getElementById(
-      "profileSection"
-    );
-
-  if (profile) {
-
-    profile.scrollIntoView({
-      behavior: "smooth"
-    });
-
-  }
-}
-
-
-function editProfile() {
-
-  const name =
-    prompt(
-      "Enter your Cinezo profile name:"
-    );
-
-  if (!name) return;
-
-  const cleanName =
-    name.trim();
-
-  if (!cleanName) return;
-
-  const profileName =
-    document.getElementById(
-      "profileName"
-    );
-
-  if (profileName) {
-
-    profileName.textContent =
-      cleanName;
-
-  }
-
-  localStorage.setItem(
-    "cinezoProfileName",
-    cleanName
-  );
-}
-
-
-/* =========================
-   AUTH MODAL
-========================= */
-
-function openAuth() {
+window.openAuth = function() {
 
   const modal =
-    document.getElementById(
-      "authModal"
-    );
+    document.getElementById("authModal");
+
 
   if (modal) {
 
-    modal.style.display =
-      "flex";
+    modal.style.display = "flex";
 
   }
 
-  showLogin();
-}
+
+  window.showLogin();
+
+};
 
 
-function closeAuth() {
+window.closeAuth = function() {
 
   const modal =
-    document.getElementById(
-      "authModal"
-    );
+    document.getElementById("authModal");
+
 
   if (modal) {
 
-    modal.style.display =
-      "none";
-
-  }
-}
-
-
-function showSignup() {
-
-  const title =
-    document.getElementById(
-      "authTitle"
-    );
-
-  const message =
-    document.getElementById(
-      "authMessage"
-    );
-
-  if (title) {
-
-    title.textContent =
-      "Create Cinezo Account";
+    modal.style.display = "none";
 
   }
 
-  if (message) {
+};
 
-    message.textContent =
-      "Create your account 🎬";
 
-  }
+// ===============================
+// SHOW LOGIN
+// ===============================
 
-  const button =
-    document.querySelector(
-      ".auth-button"
-    );
+window.showLogin = function() {
 
-  const switchButton =
-    document.querySelector(
-      ".switch-auth"
-    );
+  const login =
+    document.getElementById("loginForm");
 
-  if (button) {
+  const signup =
+    document.getElementById("signupForm");
 
-    button.textContent =
-      "📝 Sign Up";
 
-    button.onclick =
-      signupUser;
+  if (login) {
+
+    login.style.display = "block";
 
   }
 
-  if (switchButton) {
 
-    switchButton.textContent =
-      "Already have an account? Login";
+  if (signup) {
 
-    switchButton.onclick =
-      showLogin;
-
-  }
-}
-
-
-function showLogin() {
-
-  const title =
-    document.getElementById(
-      "authTitle"
-    );
-
-  const message =
-    document.getElementById(
-      "authMessage"
-    );
-
-  if (title) {
-
-    title.textContent =
-      "Login to Cinezo";
+    signup.style.display = "none";
 
   }
 
-  if (message) {
+};
 
-    message.textContent =
-      "Welcome back! 🎬";
 
-  }
+// ===============================
+// SHOW SIGNUP
+// ===============================
 
-  const button =
-    document.querySelector(
-      ".auth-button"
-    );
+window.showSignup = function() {
 
-  const switchButton =
-    document.querySelector(
-      ".switch-auth"
-    );
+  const login =
+    document.getElementById("loginForm");
 
-  if (button) {
+  const signup =
+    document.getElementById("signupForm");
 
-    button.textContent =
-      "🔐 Login";
 
-    button.onclick =
-      loginUser;
+  if (login) {
+
+    login.style.display = "none";
 
   }
 
-  if (switchButton) {
 
-    switchButton.textContent =
-      "New user? Create account";
+  if (signup) {
 
-    switchButton.onclick =
-      showSignup;
+    signup.style.display = "block";
 
   }
-}
+
+};
 
 
-/* =========================
-   SIGN UP
-========================= */
+// ===============================
+// SIGN UP
+// ===============================
 
-async function signupUser() {
+window.signupUser = async function() {
 
   const email =
-    document.getElementById(
-      "authEmail"
-    ).value.trim();
+    document
+      .getElementById("signupEmail")
+      ?.value
+      .trim();
+
 
   const password =
-    document.getElementById(
-      "authPassword"
-    ).value;
+    document
+      .getElementById("signupPassword")
+      ?.value;
+
 
   if (!email || !password) {
 
     alert(
-      "Email aur password enter karo."
+      "Email aur password dono bharo."
     );
 
     return;
+
   }
+
 
   try {
 
@@ -884,46 +598,57 @@ async function signupUser() {
       password
     );
 
+
     alert(
-      "Account successfully created 🎉"
+      "Account successfully create ho gaya 🎉"
     );
 
-    closeAuth();
+
+    window.closeAuth();
+
 
   } catch (error) {
 
+    console.log(error);
+
     alert(
-      "Signup error: " +
-      error.message
+      getAuthError(error)
     );
+
   }
-}
+
+};
 
 
-/* =========================
-   LOGIN
-========================= */
+// ===============================
+// LOGIN
+// ===============================
 
-async function loginUser() {
+window.loginUser = async function() {
 
   const email =
-    document.getElementById(
-      "authEmail"
-    ).value.trim();
+    document
+      .getElementById("loginEmail")
+      ?.value
+      .trim();
+
 
   const password =
-    document.getElementById(
-      "authPassword"
-    ).value;
+    document
+      .getElementById("loginPassword")
+      ?.value;
+
 
   if (!email || !password) {
 
     alert(
-      "Email aur password enter karo."
+      "Email aur password dono bharo."
     );
 
     return;
+
   }
+
 
   try {
 
@@ -933,55 +658,494 @@ async function loginUser() {
       password
     );
 
+
+    window.closeAuth();
+
+
     alert(
-      "Login successful 🎉"
+      "Login successful 🔐"
     );
 
-    closeAuth();
+
+    // Login ke baad wahi movie open hogi
+    if (pendingMovie) {
+
+      const movieName =
+        pendingMovie;
+
+      pendingMovie = null;
+
+
+      setTimeout(() => {
+
+        window.openMovie(
+          movieName
+        );
+
+      }, 300);
+
+    }
+
 
   } catch (error) {
 
+    console.log(error);
+
     alert(
-      "Login error: " +
-      error.message
+      getAuthError(error)
     );
+
   }
-}
+
+};
 
 
-/* =========================
-   LOGOUT
-========================= */
+// ===============================
+// LOGOUT
+// ===============================
 
-async function logoutUser() {
+window.logoutUser = async function() {
 
   try {
 
     await signOut(auth);
 
-    myList = [];
-
     alert(
-      "Logged out successfully 👋"
+      "Logout ho gaya."
     );
 
   } catch (error) {
 
-    alert(
-      "Logout error: " +
-      error.message
-    );
+    console.log(error);
+
   }
+
+};
+
+
+// ===============================
+// FIREBASE ERROR
+// ===============================
+
+function getAuthError(error) {
+
+  if (!error || !error.code) {
+
+    return "Kuch error aa gaya.";
+
+  }
+
+
+  switch (error.code) {
+
+    case "auth/invalid-email":
+
+      return "Email galat hai.";
+
+
+    case "auth/user-not-found":
+
+      return "Is email ka account nahi mila.";
+
+
+    case "auth/wrong-password":
+
+      return "Password galat hai.";
+
+
+    case "auth/invalid-credential":
+
+      return "Email ya password galat hai.";
+
+
+    case "auth/email-already-in-use":
+
+      return "Is email se account pehle se bana hua hai.";
+
+
+    case "auth/weak-password":
+
+      return "Password kam se kam 6 characters ka rakho.";
+
+
+    default:
+
+      return (
+        error.message ||
+        "Authentication error."
+      );
+
+  }
+
 }
 
 
-/* =========================
-   AUTH STATE
-========================= */
+// ===============================
+// LOAD MY LIST
+// ===============================
+
+async function loadMyList() {
+
+  if (!auth.currentUser) {
+
+    myList = [];
+
+    displayMyList();
+
+    return;
+
+  }
+
+
+  try {
+
+    const ref =
+      doc(
+        db,
+        "users",
+        auth.currentUser.uid
+      );
+
+
+    const snap =
+      await getDoc(ref);
+
+
+    if (snap.exists()) {
+
+      myList =
+        snap.data().myList || [];
+
+    } else {
+
+      myList = [];
+
+    }
+
+
+    displayMyList();
+
+
+  } catch (error) {
+
+    console.log(
+      "My List error:",
+      error
+    );
+
+  }
+
+}
+
+
+// ===============================
+// SAVE MY LIST
+// ===============================
+
+async function saveMyList() {
+
+  if (!auth.currentUser) return;
+
+
+  try {
+
+    await setDoc(
+
+      doc(
+        db,
+        "users",
+        auth.currentUser.uid
+      ),
+
+      {
+        myList: myList
+      },
+
+      {
+        merge: true
+      }
+
+    );
+
+  } catch (error) {
+
+    console.log(
+      "Save My List error:",
+      error
+    );
+
+  }
+
+}
+
+
+// ===============================
+// ADD TO MY LIST
+// ===============================
+
+window.addToMyList = async function(name) {
+
+  if (!auth.currentUser) {
+
+    alert(
+      "My List use karne ke liye Login karo 🔐"
+    );
+
+    window.openAuth();
+
+    return;
+
+  }
+
+
+  if (!myList.includes(name)) {
+
+    myList.push(name);
+
+    await saveMyList();
+
+    displayMyList();
+
+
+    alert(
+      "My List me add ho gaya ❤️"
+    );
+
+
+  } else {
+
+    alert(
+      "Ye movie already My List me hai."
+    );
+
+  }
+
+};
+
+
+// ===============================
+// REMOVE FROM MY LIST
+// ===============================
+
+window.removeFromMyList = async function(name) {
+
+  myList =
+    myList.filter(
+      item => item !== name
+    );
+
+
+  await saveMyList();
+
+  displayMyList();
+
+};
+
+
+// ===============================
+// DISPLAY MY LIST
+// ===============================
+
+function displayMyList() {
+
+  const container =
+    document.getElementById(
+      "myListContainer"
+    );
+
+
+  if (!container) return;
+
+
+  container.innerHTML = "";
+
+
+  if (!myList.length) {
+
+    container.innerHTML =
+      `<p class="empty-list">
+        Your List is empty ❤️
+      </p>`;
+
+    return;
+
+  }
+
+
+  myList.forEach(name => {
+
+    const movie =
+      movieData[name];
+
+
+    if (!movie) return;
+
+
+    const card =
+      document.createElement("div");
+
+
+    card.className =
+      "movie-card";
+
+
+    card.innerHTML = `
+      <img
+        src="${movie.poster || ""}"
+        alt="${name}"
+      >
+
+      <div class="movie-card-info">
+
+        <h3>${name}</h3>
+
+        <p>${movie.category || ""}</p>
+
+        <button
+          onclick="openMovie('${escapeQuotes(name)}')"
+        >
+          ▶ Play
+        </button>
+
+        <button
+          onclick="removeFromMyList('${escapeQuotes(name)}')"
+        >
+          Remove
+        </button>
+
+      </div>
+    `;
+
+
+    container.appendChild(card);
+
+  });
+
+}
+
+
+// ===============================
+// SEARCH
+// ===============================
+
+window.searchMovies = function() {
+
+  const input =
+    document.getElementById(
+      "searchInput"
+    );
+
+
+  if (!input) return;
+
+
+  const query =
+    input.value
+      .trim()
+      .toLowerCase();
+
+
+  const cards =
+    document.querySelectorAll(
+      ".movie-card"
+    );
+
+
+  cards.forEach(card => {
+
+    const text =
+      card.innerText
+        .toLowerCase();
+
+
+    card.style.display =
+      text.includes(query)
+        ? ""
+        : "none";
+
+  });
+
+};
+
+
+// ===============================
+// CATEGORY FILTER
+// ===============================
+
+window.filterCategory = function(category) {
+
+  const cards =
+    document.querySelectorAll(
+      ".movie-card"
+    );
+
+
+  cards.forEach(card => {
+
+    const text =
+      card.innerText
+        .toLowerCase();
+
+
+    if (
+      category === "All" ||
+      text.includes(
+        category.toLowerCase()
+      )
+    ) {
+
+      card.style.display = "";
+
+    } else {
+
+      card.style.display = "none";
+
+    }
+
+  });
+
+};
+
+
+// ===============================
+// PROFILE
+// ===============================
+
+window.openProfile = function() {
+
+  const profile =
+    document.getElementById(
+      "profileSection"
+    );
+
+
+  if (profile) {
+
+    profile.style.display = "block";
+
+
+    profile.scrollIntoView({
+      behavior: "smooth"
+    });
+
+  }
+
+};
+
+
+// ===============================
+// AUTH STATE
+// ===============================
 
 onAuthStateChanged(
   auth,
-  async user => {
+  async (user) => {
+
+    const loginButton =
+      document.getElementById(
+        "loginButton"
+      );
+
 
     if (user) {
 
@@ -990,105 +1154,89 @@ onAuthStateChanged(
         user.email
       );
 
-      await loadMyList();
 
-      const profileName =
-        document.getElementById(
-          "profileName"
-        );
+      if (loginButton) {
 
-      if (profileName) {
+        loginButton.textContent =
+          "👤 Logout";
 
-        const savedName =
-          localStorage.getItem(
-            "cinezoProfileName"
-          );
 
-        profileName.textContent =
-          savedName ||
-          user.email.split("@")[0];
+        loginButton.onclick =
+          window.logoutUser;
 
       }
+
+
+      await loadMyList();
+
+      await loadAdminMovies();
+
 
     } else {
 
       console.log(
-        "User not logged in"
+        "User logged out"
       );
+
+
+      if (loginButton) {
+
+        loginButton.textContent =
+          "👤 Login";
+
+
+        loginButton.onclick =
+          window.openAuth;
+
+      }
+
 
       myList = [];
 
       displayMyList();
+
     }
 
   }
 );
 
 
-/* =========================
-   LOAD PROFILE NAME
-========================= */
-
-window.addEventListener(
-  "DOMContentLoaded",
-  () => {
-
-    const savedName =
-      localStorage.getItem(
-        "cinezoProfileName"
-      );
-
-    if (savedName) {
-
-      const profileName =
-        document.getElementById(
-          "profileName"
-        );
-
-      if (profileName) {
-
-        profileName.textContent =
-          savedName;
-
-      }
-    }
-  }
-);
-
-
-/* =========================
-   MODAL CLICK
-========================= */
+// ===============================
+// CLOSE MODALS ON OUTSIDE CLICK
+// ===============================
 
 window.addEventListener(
   "click",
-  event => {
+  function(event) {
 
     const movieModal =
       document.getElementById(
-        "modal"
+        "movieModal"
       );
+
 
     const authModal =
       document.getElementById(
         "authModal"
       );
 
+
     if (
       movieModal &&
       event.target === movieModal
     ) {
 
-      closeMovie();
+      window.closeMovie();
 
     }
+
 
     if (
       authModal &&
       event.target === authModal
     ) {
 
-      closeAuth();
+      window.closeAuth();
 
     }
 
@@ -1096,57 +1244,19 @@ window.addEventListener(
 );
 
 
-/* =========================
-   WINDOW FUNCTIONS
-========================= */
+// ===============================
+// START
+// ===============================
 
-window.openMovie =
-  openMovie;
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
 
-window.closeMovie =
-  closeMovie;
+    displayMyList();
 
-window.playSelectedMovie =
-  playSelectedMovie;
+    console.log(
+      "🎬 CINEZO READY"
+    );
 
-window.searchMovies =
-  searchMovies;
-
-window.filterCategory =
-  filterCategory;
-
-window.addToList =
-  addToList;
-
-window.removeFromList =
-  removeFromList;
-
-window.displayMyList =
-  displayMyList;
-
-window.showProfile =
-  showProfile;
-
-window.editProfile =
-  editProfile;
-
-window.openAuth =
-  openAuth;
-
-window.closeAuth =
-  closeAuth;
-
-window.showSignup =
-  showSignup;
-
-window.showLogin =
-  showLogin;
-
-window.signupUser =
-  signupUser;
-
-window.loginUser =
-  loginUser;
-
-window.logoutUser =
-  logoutUser;
+  }
+);
