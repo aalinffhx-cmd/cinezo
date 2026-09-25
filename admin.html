@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Cinezo Admin Panel</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:Arial,sans-serif;
+  background:#090909;
+  color:white;
+  min-height:100vh;
+}
+
+header{
+  background:#111;
+  padding:18px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid #292929;
+}
+
+.logo{
+  font-size:24px;
+  font-weight:bold;
+  color:#e50914;
+}
+
+.logo span{
+  color:white;
+}
+
+.admin-badge{
+  background:#e50914;
+  padding:7px 12px;
+  border-radius:20px;
+  font-size:12px;
+}
+
+.container{
+  max-width:900px;
+  margin:auto;
+  padding:20px;
+}
+
+.login-box,
+.panel{
+  background:#151515;
+  border:1px solid #292929;
+  border-radius:16px;
+  padding:22px;
+  margin-top:20px;
+}
+
+h1{
+  font-size:28px;
+  margin-bottom:8px;
+}
+
+h2{
+  margin-bottom:18px;
+}
+
+p{
+  color:#aaa;
+  line-height:1.5;
+}
+
+input,
+textarea,
+select{
+  width:100%;
+  background:#0d0d0d;
+  color:white;
+  border:1px solid #333;
+  border-radius:10px;
+  padding:14px;
+  margin:8px 0;
+  font-size:15px;
+  outline:none;
+}
+
+textarea{
+  min-height:120px;
+  resize:vertical;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+  border-color:#e50914;
+}
+
+button{
+  border:none;
+  border-radius:10px;
+  padding:13px 18px;
+  font-size:15px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.login-btn,
+.save-btn{
+  width:100%;
+  background:#e50914;
+  color:white;
+  margin-top:10px;
+}
+
+.logout-btn{
+  background:#292929;
+  color:white;
+}
+
+.movie-card{
+  background:#101010;
+  border:1px solid #292929;
+  border-radius:14px;
+  padding:16px;
+  margin-top:14px;
+}
+
+.movie-card h3{
+  margin-bottom:7px;
+}
+
+.movie-card small{
+  color:#aaa;
+}
+
+.delete-btn{
+  background:#8b0000;
+  color:white;
+  margin-top:12px;
+}
+
+.status{
+  margin-top:12px;
+  padding:12px;
+  border-radius:10px;
+  background:#202020;
+  color:#ddd;
+  display:none;
+}
+
+.hidden{
+  display:none !important;
+}
+
+.form-title{
+  margin-top:25px;
+  margin-bottom:8px;
+}
+
+.warning{
+  background:#241c00;
+  border:1px solid #705b00;
+  color:#e9d889;
+  padding:14px;
+  border-radius:10px;
+  margin-top:15px;
+  font-size:13px;
+}
+
+.empty{
+  text-align:center;
+  padding:30px;
+  color:#888;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">
+    <span>▶</span> CINEZO
+  </div>
+
+  <div class="admin-badge">
+    ADMIN PANEL
+  </div>
+</header>
+
+
+<div class="container">
+
+  <!-- LOGIN -->
+
+  <div id="loginBox" class="login-box">
+
+    <h1>🔐 Admin Login</h1>
+
+    <p>
+      Cinezo management panel
+    </p>
+
+    <div class="warning">
+      Sirf authorized Cinezo account se login karein.
+    </div>
+
+    <input
+      id="email"
+      type="email"
+      placeholder="Admin Email"
+    >
+
+    <input
+      id="password"
+      type="password"
+      placeholder="Password"
+    >
+
+    <button
+      class="login-btn"
+      onclick="adminLogin()"
+    >
+      🔐 Login
+    </button>
+
+    <div id="loginStatus" class="status"></div>
+
+  </div>
+
+
+  <!-- ADMIN PANEL -->
+
+  <div id="adminPanel" class="hidden">
+
+    <div class="panel">
+
+      <div style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        gap:10px;
+        flex-wrap:wrap;
+      ">
+
+        <div>
+          <h1>🎬 Cinezo Admin</h1>
+          <p id="adminEmail">
+            Admin
+          </p>
+        </div>
+
+        <button
+          class="logout-btn"
+          onclick="adminLogout()"
+        >
+          🚪 Logout
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- ADD MOVIE -->
+
+    <div class="panel">
+
+      <h2>➕ Add Movie</h2>
+
+      <p>
+        Movie ki basic information yahan add karo.
+      </p>
+
+      <div class="form-title">
+        Movie Title
+      </div>
+
+      <input
+        id="movieTitle"
+        type="text"
+        placeholder="Example: Shadow City"
+      >
+
+      <div class="form-title">
+        Description
+      </div>
+
+      <textarea
+        id="movieDescription"
+        placeholder="Movie description..."
+      ></textarea>
+
+      <div class="form-title">
+        Category
+      </div>
+
+      <select id="movieCategory">
+
+        <option value="Action">
+          💥 Action
+        </option>
+
+        <option value="Drama">
+          ❤️ Drama
+        </option>
+
+        <option value="Thriller">
+          👻 Thriller
+        </option>
+
+        <option value="Comedy">
+          😂 Comedy
+        </option>
+
+        <option value="Web Series">
+          📺 Web Series
+        </option>
+
+      </select>
+
+
+      <div class="form-title">
+        Rating
+      </div>
+
+      <input
+        id="movieRating"
+        type="number"
+        min="0"
+        max="10"
+        step="0.1"
+        placeholder="Example: 8.5"
+      >
+
+
+      <div class="form-title">
+        Year
+      </div>
+
+      <input
+        id="movieYear"
+        type="number"
+        placeholder="2026"
+      >
+
+
+      <div class="form-title">
+        Video File Path
+      </div>
+
+      <input
+        id="movieVideo"
+        type="text"
+        placeholder="videos/my-movie.mp4"
+      >
+
+      <p style="font-size:12px;">
+        Example: videos/dark-world.mp4
+      </p>
+
+
+      <div class="form-title">
+        Poster File Path
+      </div>
+
+      <input
+        id="moviePoster"
+        type="text"
+        placeholder="posters/my-poster.png"
+      >
+
+      <p style="font-size:12px;">
+        Example: posters/dark-world-poster.png
+      </p>
+
+
+      <button
+        class="save-btn"
+        onclick="saveMovie()"
+      >
+        💾 Save Movie
+      </button>
+
+      <div id="saveStatus" class="status"></div>
+
+    </div>
+
+
+    <!-- MOVIE LIST -->
+
+    <div class="panel">
+
+      <h2>🎥 Added Movies</h2>
+
+      <div id="movieList">
+
+        <div class="empty">
+          Movies yahan appear hongi.
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script type="module">
+
+import {
+  initializeApp
+} from
+"https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+
+
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+} from
+"https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+
+
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  deleteDoc,
+  doc,
+  serverTimestamp
+} from
+"https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+
+/* =========================
+   FIREBASE
+========================= */
+
+const firebaseConfig = {
+
+  apiKey:
+    "AIzaSyBJleOE7G-_-6_9pyoYFKMVUrFOxJwseVE",
+
+  authDomain:
+    "cinezo-1d2ad.firebaseapp.com",
+
+  projectId:
+    "cinezo-1d2ad",
+
+  storageBucket:
+    "cinezo-1d2ad.firebasestorage.app",
+
+  messagingSenderId:
+    "581701323761",
+
+  appId:
+    "1:581701323761:web:da70c2de46c438af021250",
+
+  measurementId:
+    "G-LSM6CLHTG5"
+};
+
+
+const app =
+  initializeApp(firebaseConfig);
+
+const auth =
+  getAuth(app);
+
+const db =
+  getFirestore(app);
+
+
+/* =========================
+   LOGIN
+========================= */
+
+window.adminLogin =
+async function(){
+
+  const email =
+    document.getElementById("email")
+      .value
+      .trim();
+
+  const password =
+    document.getElementById("password")
+      .value;
+
+  const status =
+    document.getElementById("loginStatus");
+
+
+  if(!email || !password){
+
+    status.style.display="block";
+
+    status.textContent =
+      "Email aur password enter karo.";
+
+    return;
+  }
+
+
+  try{
+
+    await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+    status.style.display="block";
+
+    status.textContent =
+      "Login successful 🎉";
+
+  }catch(error){
+
+    status.style.display="block";
+
+    status.textContent =
+      "Login failed: " +
+      error.message;
+
+  }
+
+};
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+window.adminLogout =
+async function(){
+
+  await signOut(auth);
+
+};
+
+
+/* =========================
+   AUTH STATE
+========================= */
+
+onAuthStateChanged(
+  auth,
+  user => {
+
+    const loginBox =
+      document.getElementById(
+        "loginBox"
+      );
+
+    const adminPanel =
+      document.getElementById(
+        "adminPanel"
+      );
+
+    const adminEmail =
+      document.getElementById(
+        "adminEmail"
+      );
+
+
+    if(user){
+
+      loginBox.classList.add(
+        "hidden"
+      );
+
+      adminPanel.classList.remove(
+        "hidden"
+      );
+
+      adminEmail.textContent =
+        "Logged in as: " +
+        user.email;
+
+      loadMovies();
+
+    }else{
+
+      loginBox.classList.remove(
+        "hidden"
+      );
+
+      adminPanel.classList.add(
+        "hidden"
+      );
+
+    }
+
+  }
+);
+
+
+/* =========================
+   SAVE MOVIE
+========================= */
+
+window.saveMovie =
+async function(){
+
+  const title =
+    document.getElementById(
+      "movieTitle"
+    ).value.trim();
+
+  const description =
+    document.getElementById(
+      "movieDescription"
+    ).value.trim();
+
+  const category =
+    document.getElementById(
+      "movieCategory"
+    ).value;
+
+  const rating =
+    document.getElementById(
+      "movieRating"
+    ).value;
+
+  const year =
+    document.getElementById(
+      "movieYear"
+    ).value;
+
+  const video =
+    document.getElementById(
+      "movieVideo"
+    ).value.trim();
+
+  const poster =
+    document.getElementById(
+      "moviePoster"
+    ).value.trim();
+
+  const status =
+    document.getElementById(
+      "saveStatus"
+    );
+
+
+  if(!title){
+
+    status.style.display="block";
+
+    status.textContent =
+      "Movie title required hai.";
+
+    return;
+  }
+
+
+  try{
+
+    await addDoc(
+      collection(db,"movies"),
+      {
+
+        title:
+          title,
+
+        description:
+          description,
+
+        category:
+          category,
+
+        rating:
+          rating,
+
+        year:
+          year,
+
+        video:
+          video,
+
+        poster:
+          poster,
+
+        createdAt:
+          serverTimestamp()
+
+      }
+    );
+
+
+    status.style.display="block";
+
+    status.textContent =
+      "Movie successfully saved 🎉";
+
+
+    document.getElementById(
+      "movieTitle"
+    ).value="";
+
+    document.getElementById(
+      "movieDescription"
+    ).value="";
+
+    document.getElementById(
+      "movieRating"
+    ).value="";
+
+    document.getElementById(
+      "movieYear"
+    ).value="";
+
+    document.getElementById(
+      "movieVideo"
+    ).value="";
+
+    document.getElementById(
+      "moviePoster"
+    ).value="";
+
+
+    loadMovies();
+
+
+  }catch(error){
+
+    status.style.display="block";
+
+    status.textContent =
+      "Save error: " +
+      error.message;
+
+  }
+
+};
+
+
+/* =========================
+   LOAD MOVIES
+========================= */
+
+async function loadMovies(){
+
+  const container =
+    document.getElementById(
+      "movieList"
+    );
+
+
+  try{
+
+    const snapshot =
+      await getDocs(
+        collection(db,"movies")
+      );
+
+
+    container.innerHTML="";
+
+
+    if(snapshot.empty){
+
+      container.innerHTML =
+        `<div class="empty">
+          Abhi koi movie add nahi hai.
+        </div>`;
+
+      return;
+    }
+
+
+    snapshot.forEach(
+      movieDoc => {
+
+        const movie =
+          movieDoc.data();
+
+
+        const card =
+          document.createElement(
+            "div"
+          );
+
+        card.className =
+          "movie-card";
+
+
+        card.innerHTML = `
+
+          <h3>
+            🎬 ${escapeHTML(
+              movie.title || "Untitled"
+            )}
+          </h3>
+
+          <small>
+            ${escapeHTML(
+              movie.category || "Entertainment"
+            )}
+            • ⭐
+            ${escapeHTML(
+              movie.rating || "-"
+            )}
+            •
+            ${escapeHTML(
+              movie.year || "-"
+            )}
+          </small>
+
+          <p style="margin-top:10px;">
+            ${escapeHTML(
+              movie.description || ""
+            )}
+          </p>
+
+          <button
+            class="delete-btn"
+            onclick="deleteMovie('${movieDoc.id}')"
+          >
+            🗑️ Delete
+          </button>
+
+        `;
+
+
+        container.appendChild(
+          card
+        );
+
+      }
+    );
+
+
+  }catch(error){
+
+    container.innerHTML =
+      `<div class="empty">
+        Movies load nahi hui.<br><br>
+        ${escapeHTML(
+          error.message
+        )}
+      </div>`;
+
+  }
+
+}
+
+
+/* =========================
+   DELETE MOVIE
+========================= */
+
+window.deleteMovie =
+async function(id){
+
+  const confirmDelete =
+    confirm(
+      "Is movie ko delete karna hai?"
+    );
+
+
+  if(!confirmDelete)
+    return;
+
+
+  try{
+
+    await deleteDoc(
+      doc(
+        db,
+        "movies",
+        id
+      )
+    );
+
+
+    loadMovies();
+
+
+  }catch(error){
+
+    alert(
+      "Delete error: " +
+      error.message
+    );
+
+  }
+
+};
+
+
+/* =========================
+   SECURITY HELPER
+========================= */
+
+function escapeHTML(value){
+
+  return String(value)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
+
+</script>
+
+</body>
+</html>
